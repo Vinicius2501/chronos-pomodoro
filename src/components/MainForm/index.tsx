@@ -8,6 +8,7 @@ import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
 import { getNextCycle } from '../../utils/GetNextCycle';
 import { getNextCycleType } from '../../utils/getNextCycleType';
 import { TaskActionTypes } from '../../contexts/TaskContext/TaskActions';
+import { Tips } from '../Tips';
 //import style from './style.module.css';
 
 export function MainForm() {
@@ -38,13 +39,11 @@ export function MainForm() {
       type: nextCycleType,
     };
 
-    dispatch({type:TaskActionTypes.START_TASK, payload: newTask});
-
+    dispatch({ type: TaskActionTypes.START_TASK, payload: newTask });
   }
 
   function handleInterruptTask() {
-    dispatch({type: TaskActionTypes.INTERRUPT_TASK})
-    
+    dispatch({ type: TaskActionTypes.INTERRUPT_TASK });
   }
 
   return (
@@ -59,7 +58,9 @@ export function MainForm() {
         />
       </div>
       <div className='formRow'>
-        <p>Lorem ipsum dolor sit amet.</p>
+        <p>
+          <Tips />
+        </p>
       </div>
       {state.currentCycle > 0 && (
         <div className='formRow'>
