@@ -37,7 +37,6 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
 
   useEffect(() => {
     if (!state.activeTask) {
-      console.log('Nenhuma tarefa ativa');
       worker.terminate();
     }
     worker.postMessage(state);
