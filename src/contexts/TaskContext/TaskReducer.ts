@@ -1,6 +1,6 @@
 import type { TaskStateModel } from '../../models/TaskStateModel';
 import { formatSecondstoMinutes } from '../../utils/formatSecondsToMinutes';
-import { getNextCycle } from '../../utils/GetNextCycle';
+import { getNextCycle } from '../../utils/getNextCycle';
 import { TaskActionTypes, type TaskActionModel } from './TaskActions';
 
 export function taskReducer(
