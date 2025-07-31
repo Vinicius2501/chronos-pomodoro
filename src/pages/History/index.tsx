@@ -10,6 +10,7 @@ import { translateStatusTasks } from '../../utils/translateStatusTasks';
 import { useEffect, useState } from 'react';
 import { sortTasks, type SortTaskOptions } from '../../utils/sortTasks';
 import { TaskActionTypes } from '../../contexts/TaskContext/TaskActions';
+import { showMessage } from '../../adapters/showMessage';
 
 export function History() {
   const typesDict = {
@@ -18,6 +19,8 @@ export function History() {
     longBreakTime: 'Descanso longo',
   };
   const { state, dispatch } = useTaskContext();
+
+  const [confirmClearHistory, setConfirmClearHistory] = useState(false);
 
   const hasTasks = state.tasks.length > 0;
 
@@ -40,6 +43,13 @@ export function History() {
     }));
   }, [state.tasks]);
 
+  useEffect(() => {
+    if (!confirmClearHistory) return;
+
+    dispatch({ type: TaskActionTypes.RESET_TASKS });
+    setConfirmClearHistory(false);
+  }, [confirmClearHistory, dispatch]);
+
   function handleSortTasks({ field }: Pick<SortTaskOptions, 'field'>) {
     const newDirection = sortTasksOptions.direction === 'desc' ? 'asc' : 'desc';
 
@@ -55,8 +65,9 @@ export function History() {
   }
 
   function handleResetHistory() {
-    if (!confirm('Deseja apagar o historico')) return;
-    dispatch({ type: TaskActionTypes.RESET_TASKS });
+    showMessage.confirm('Deseja pagar o historico', reason => {
+      setConfirmClearHistory(reason);
+    });
   }
 
   return (
