@@ -75,7 +75,7 @@ export function History() {
   }
 
   function handleResetHistory() {
-    showMessage.confirm('Deseja pagar o historico', reason => {
+    showMessage.confirm('Deseja apagar o historico', reason => {
       setConfirmClearHistory(reason);
     });
   }
