@@ -13,6 +13,10 @@ import { TaskActionTypes } from '../../contexts/TaskContext/TaskActions';
 import { showMessage } from '../../adapters/showMessage';
 
 export function History() {
+  useEffect(() => {
+    document.title = 'Histórico - Chronos';
+  }, []);
+
   const typesDict = {
     workTime: 'Foco',
     shortBreakTime: 'Descanso rápido',
