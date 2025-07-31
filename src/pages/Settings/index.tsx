@@ -6,22 +6,63 @@ import { Heading } from '../../components/Heading';
 import { MainTemplate } from '../../templates/MainTemplate';
 import { useRef } from 'react';
 import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
+import { showMessage } from '../../adapters/showMessage';
+import { TaskActionTypes } from '../../contexts/TaskContext/TaskActions';
 
 export function Settings() {
-  const { state } = useTaskContext();
+  const { state, dispatch } = useTaskContext();
 
   const workTimeInputRef = useRef<HTMLInputElement>(null);
   const shortBreakInputRef = useRef<HTMLInputElement>(null);
   const longBreakInputRef = useRef<HTMLInputElement>(null);
-
   function handleSaveSettings(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const workTime = workTimeInputRef.current?.value;
-    const shortBreakTime = shortBreakInputRef.current?.value;
-    const longBreakTime = longBreakInputRef.current?.value;
+    const formErrors: string[] = [];
 
-    console.log(workTime, shortBreakTime, longBreakTime);
+    showMessage.dismiss();
+
+    const workTime = Number(workTimeInputRef.current?.value);
+    const shortBreakTime = Number(shortBreakInputRef.current?.value);
+    const longBreakTime = Number(longBreakInputRef.current?.value);
+
+    if (isNaN(workTime)) {
+      formErrors.push('Utilize apenas números para foco!');
+    }
+    if (isNaN(shortBreakTime)) {
+      formErrors.push('Utilize apenas números para descanso rápido!');
+    }
+    if (isNaN(longBreakTime)) {
+      formErrors.push('Utilize apenas números para descanso longo!');
+    }
+
+    if (workTime < 1 || workTime > 99) {
+      formErrors.push('Digite valores entre 1 e 99 para foco!');
+    }
+    if (shortBreakTime < 1 || shortBreakTime > 15) {
+      formErrors.push('Digite valores entre 1 e 15 para descanso rápido!');
+    }
+    if (longBreakTime < 1 || longBreakTime > 30) {
+      formErrors.push('Digite valores entre 1 e 30 para descanso longo!');
+    }
+
+    if (formErrors.length > 0) {
+      formErrors.forEach(error => {
+        showMessage.error(error);
+      });
+      return;
+    }
+
+    dispatch({
+      type: TaskActionTypes.CHANGE_SETTINGS,
+      payload: {
+        workTime: workTime,
+        shortBreakTime: shortBreakTime,
+        longBreakTime: longBreakTime,
+      },
+    });
+
+    showMessage.success('Configurações salvas com sucesso!');
   }
 
   return (
@@ -43,6 +84,7 @@ export function Settings() {
               labelText='Foco'
               ref={workTimeInputRef}
               defaultValue={state.config.workTime}
+              type='number'
             ></DefaultInput>
           </div>
           <div className='formRow'>
@@ -51,6 +93,7 @@ export function Settings() {
               labelText='Descanso rápido'
               ref={shortBreakInputRef}
               defaultValue={state.config.shortBreakTime}
+              type='number'
             ></DefaultInput>
           </div>
           <div className='formRow'>
@@ -59,6 +102,7 @@ export function Settings() {
               labelText='Descanso longo'
               ref={longBreakInputRef}
               defaultValue={state.config.longBreakTime}
+              type='number'
             ></DefaultInput>
             <div className='formRow'>
               <DefaultButton

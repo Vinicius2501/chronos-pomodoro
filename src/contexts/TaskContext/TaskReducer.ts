@@ -61,5 +61,11 @@ export function taskReducer(
     case TaskActionTypes.RESET_TASKS: {
       return { ...initialTaskState };
     }
+    case TaskActionTypes.CHANGE_SETTINGS: {
+      return {
+        ...state,
+        config: { ...action.payload },
+      };
+    }
   }
 }
